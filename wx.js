@@ -1,6 +1,6 @@
 /*
- * node js版本的微信第三方游戏管理平台
- */
+* node js版本的微信第三方游戏管理平台
+*/
 
 /* 引入第三方中间件*/
 
@@ -90,20 +90,46 @@ app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
 	
 })
 .event(function(message, req, res, nexgt){
-	
+	if (message.Event === 'subscribe') {
+		res.reply({
+			type:'news',
+			content:[{
+				title:'',
+				description:'',
+				picurl:'',
+				url:''
+			}]	
+		});
+	} else if (message.Event === 'CLICK') {
+		if (message.EventKey === 'V1001_TODAY_MUSIC') {
+			res.reply({
+				type: 'text',
+				content: 'thanks for you welcome!'
+			});
+		}
+	}
 })
 .middlewarify()
 ));
 
 var wxmenuapi = new wechatapi(config.wechatapi.appid, config.wechatapi.secret);
 
+
+var menuJson;
+
 var selectFunction = function(){
 	var selStr = "SELECT mType as type, mName as name, mUrlOrKey as keyOrUrl  FROM menu_table WHERE isSubBtn = 'NO'";
 	mysqlConnection.query(selStr, function(error, result){
-		console.log(result);
-		pramers = result;
-		return formatData(result);
+		menuJson = formatData(result);
+		return menuJson;
 	});
+}
+
+var isEmptyObjec = function(data){
+	for (var n in data){
+		return false;
+	}
+	return true;
 }
 
 var fatherNameSelFun = function(){
@@ -114,19 +140,24 @@ var fatherNameSelFun = function(){
 			if (tmpObj === t.mFatherName)
 			{
 				delete t.mFatherName
-				continue;
 			}
 			tmpObj = t.mFatherName;
 		})
-		console.log(resultSub);
-		return resultSub;
+		resultSub.forEach(function(t){
+			if (!isEmptyObjec(t)){
+				selectSubFunction(t.mFatherName);
+			}
+		})
 	});
 }
 
 var selectSubFunction = function(data){
 	var selSubStr = "SELECT mType as type, mName as name, mUrlOrKey as keyOrUrl FROM menu_table WHERE mFatherName =?";
 	mysqlConnection.query(selSubStr, [data], function(err, resultSub){
-		return formatData(resultSub);
+		var fatherMenu=formatData(resultSub);
+		menuJson.push(createTwoMenu(data, fatherMenu));
+		console.log("**********************************", menuJson);
+		menuCallBack();
 	});
 }
 
@@ -141,26 +172,26 @@ var formatData = function(data){
 			delete tmp.keyOrUrl;
 		}
 	})
+	return data;
 }
 
 
 var createTwoMenu =function(t, data){
-	return {
+	var da = {
 		"name":t,
 		"sub_button":data
 	};
+	return da;
 }
 
-var mysqlMenu = function(){
-	var menuJson = selectFunction();
-	var fatherMenu = fatherNameSelFun();
-	if (fatherMenu && fatherMenu.length > 0){
-		fatherMenu.forEach(function(t){
-			console.log("=======================", t);
-			menuJson.push(createMenu(t, selectSubFunction(t)));
-		})
-	}
+var menuCretaeFun = function(){
+	selectFunction();
+	fatherNameSelFun();
+}
 
+menuCretaeFun();
+
+var menuCallBack = function(){
 	wxmenuapi.createMenu(menuJson, function(err, result){
 		if (err){
 			console.log(err);
@@ -170,9 +201,6 @@ var mysqlMenu = function(){
 		}
 	});
 }
-
-mysqlMenu();
-	
 
 /*平台自定义接口*/
 
