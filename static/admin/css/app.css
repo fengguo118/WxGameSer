@@ -1,0 +1,22 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	background: #444 url(http://sandbox.runjs.cn/uploads/rs/418/nkls38xx/carbon_fibre_big.png);
+}
+
+.loginBox{
+	width: 420px;
+	height: 230px;
+	padding: 0 20px;
+	border: 1px solid #fff;
+	color: #000;
+	margin-top: 40px;
+	border-radius: 8px;
+	background: white;
+	box-shadow: 0 0 15px #222;
+	background: -moz-linear-gradient(top, #fff, #efefefe 8%);
+	background:-webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+}
