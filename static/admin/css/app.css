@@ -19,4 +19,33 @@ body{
 	box-shadow: 0 0 15px #222;
 	background: -moz-linear-gradient(top, #fff, #efefefe 8%);
 	background:-webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6), to(#f4f4f4));
+	font:11px/1.5em 'Microsoft YaHei';
+	position: absolute;
+	left:50%;
+	top:50%;
+	margin-left:-210px;
+	margin-top:-115px;
+}
+
+.loginBox h2{
+	height:45px;
+	width:150px;
+	font-size:20px;
+	font-weight:normal;
+	lin
+}
+
+.loginBox .left{
+	border-right:1px solid #ccc;
+	height:100%;
+	padding-right:200px;
+}
+
+.loginBox .lh30{
+	width:120px;
+	padding-top:10px;
+}
+
+.loginBox .lbt{
+	width:200px;
 }

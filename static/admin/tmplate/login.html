@@ -1,15 +1,23 @@
 <div class="container">
-<section class="loginBox row-fluid">
-	<section class="span7 left">
+<div class="loginBox row">
+	 <form class="form-horizontal" role="form">
+	<div class="form-group col-md-7 left">
 		<h2>用户登录</h2>
-		<p><input type="text" name="userInfo.username"/></p>
-		<p><input type="password" name="userInfo.password"/></p>
-		<section class="row-fluid">
-			<section class="span8 lh30">
-				<label><input type="checkbox" name="remember">下次自动登录</label>
-			</section>
-			<section class="span1"><input type="button" value="登录" class="btn btn-primary"></section>
-		</section>
-	</section>
-</section>
+		<p><input type="text"  ng-model="userInfo.username" placeholder="用户名"/></p>
+		<p><input type="password" ng-model="userInfo.password" placeholder="密码"/></p>
+		<div class="row lbt">
+			<div class="col-md-5 lh30">
+				<label><input type="checkbox" ng-model="remember">下次自动登录</label>
+			</div>
+			<div class="col-md-2"><input type="button" value="登录" class="btn btn-primary" ng-click="login(userInfo)"></div>
+		</div>
+	</div>
+	 </form>
+	<div class="col-md-5 right">
+		<h2>微信第三方管理平台</h2>
+		<div>
+			<p>这是一个第三方游戏的微信管理平台， 通过该平台可以使用提供的微信小游戏， 增加商家现场活动或者是线上吸粉活动的利器。</p>
+		</div>
+	</div>
+</div>
 </div>
