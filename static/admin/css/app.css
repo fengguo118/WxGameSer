@@ -7,6 +7,17 @@ body{
 	background: #444 url(http://sandbox.runjs.cn/uploads/rs/418/nkls38xx/carbon_fibre_big.png);
 }
 
+a{
+	color:#e67e22;
+	outline:none;
+	text-decoration:none;
+}
+
+a:active,a:hover,a:focus,a:visited {
+	outline:none;
+	text-decoration:none;
+}
+
 .loginBox{
 	width: 420px;
 	height: 230px;
@@ -48,4 +59,42 @@ body{
 
 .loginBox .lbt{
 	width:200px;
+}
+
+.main-navigation{
+	text-align:left;
+	background:#fff;
+	border-top:1px solid #ebebeb;
+	border-bottom:3px solid #e1e1e1;
+	width:74%;
+}
+.main-navigation .menu{
+	padding:0px;
+	margin:0px;
+}
+
+.main-navigation .menu li.nav-current{
+	border-bottom:3px solid #e67e22;
+	margin-bottom:-2px;
+}
+
+.main-navigation .menu li{
+	list-style:none;
+	display:inline-block;
+	position:relative;
+}
+
+.main-navigation .menu li a{
+	color:#505050;
+	line-height:4em;
+	display:block;
+	padding:0 1px;
+}
+
+.main-navigation .menu li a:visited, a:focus, a:active{
+	color:#505050;
+	line-height:4em;
+	background-color:#000;
+	border-bottom:3px solid #e67e22;
+	margin-bottom:-2px;
 }

@@ -18,17 +18,23 @@ routerApp.config(function($stateProvider, $urlRouterProvider){
 		}
 	})
 	.state('main', {
-		url:'/{menuList:[0-9]{1,3}}',
-		views:{
-			'':{
-				templateUrl:'tmplate/main.html'
-			},
-			'menuList@main':{
-				templateUrl:'tmplate/menuList.html'
-			},
-			'content':{
-				templateUrl:'tmplate/content.html'
-			}
-		}
+		url:'/main',
+		templateUrl:'tmplate/main.html'
+	})
+	.state('main.zhanp', {
+		url:'/zhanp',
+		templateUrl:'tmplate/content.html'
+	})
+	.state('main.ggl', {
+		url:'/ggl',
+		templateUrl:'tmplate/ggl.html'
+	})
+	.state('main.yyy', {
+		url:'/yy',
+		templateUrl:'tmplate/yyy.html'
+	})
+	.state('main.zhanp.info', {
+		url:'/info',
+		templateUrl:'tmplate/info.html'
 	})
 });

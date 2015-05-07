@@ -1,3 +1,32 @@
 <div class="container">
-	
+<nav class="main-navigation">
+	<div class="container">
+	<div class="row">
+	<div class="col-md-12">
+		<div class="navbar-header">
+		<span class="nav-toggle-button collapse" data-target="#main-menu">
+			<span class="sr-only">Toggle Navigation</span>
+		</span>
+		</div>
+		<div class="collapse navbar-collapse" id="main-menu">
+		<ul class="menu">
+		<li class="nav-current" role="presentation">
+		 <a ui-sref=".info">大转盘</a>
+		</li>
+		<li role="presentation">
+		 <a ui-sref=".add">添加奖品信息</a>
+		</li>
+		<li  role="presentation">
+		 <a ui-sref=".update">修改奖品信息</a>
+		</li>
+		<li  role="presentation">
+		 <a ui-sref=".delete">删除奖品信息</a>
+		</li>
+		</ul>
+		</div>
+	</div>
+	</div>
+	</div>
+</nav>
+<div ui-view=""></div>
 </div>

@@ -1,13 +1,25 @@
 <div class="container">
-   <div class="navbar navbar-inverse"  role="navigation">
+	<div class="row">
+   <div class="col-md-12 navbar navbar-default"  role="navigation">
+   </div>
    </div>
    <div class="row">
 	   <div class="col-md-3">
-		   <div ui-view="menuList">
-		   </div>
+		  <div class="row">
+		  <div class="col-md-12">
+		  	<div class="list-group">
+		  		<a href="javascript:void(0);" class="list-group-item active">
+		  			游戏列表
+		  		</a>
+		  		<a ui-sref=".zhanp" class="list-group-item">大转盘</a>
+		  		<a ui-sref=".ggl" class="list-group-item">刮刮乐</a>
+		  		<a ui-sref=".yyy" class="list-group-item">摇一摇</a>
+		  	</div>
+		  </div>
+		  </div>
 	   </div>
 	   <div class="col-md-9">
-		   <div ui-view="content">
+		   <div ui-view="">
 		   </div>
 	   </div>
    </div>
