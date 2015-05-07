@@ -18,10 +18,16 @@ routerApp.config(function($stateProvider, $urlRouterProvider){
 		}
 	})
 	.state('main', {
-		url:'/main',
+		url:'/{menuList:[0-9]{1,3}}',
 		views:{
 			'':{
 				templateUrl:'tmplate/main.html'
+			},
+			'menuList@main':{
+				templateUrl:'tmplate/menuList.html'
+			},
+			'content':{
+				templateUrl:'tmplate/content.html'
 			}
 		}
 	})

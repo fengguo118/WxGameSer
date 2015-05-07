@@ -17,7 +17,6 @@ var config       = require('./config/config.js').config;
 
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
-app.use(express.static(__dirname + '/static'));
 
 /*mysql数据库链接信息*/
 
@@ -60,57 +59,57 @@ var keepConnected = function() {
 keepConnected();
 
 /*微信中间件*/
-// app.use(express.query());
-// app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
-// 	if (message && (message.content === "抽奖" || message.content === "大转盘")){
-// 		res.reply({
-// 			type:'news',
-// 			content:[{
-// 				title:'',
-// 				description:'',
-// 				picurl:'',
-// 				url:''
-// 			}]
-// 		});
-// 	}
-// })
-// .image(function(message, req, res, next){
-//
-// })
-// .voice(function(message, req, res, next){
-//
-// })
-// .video(function(message, req, res, next){
-//
-// })
-// .location(function(message, req, res, next){
-//
-// })
-// .link(function(message, req, res, next){
-//
-// })
-// .event(function(message, req, res, nexgt){
-// 	if (message.Event === 'subscribe') {
-// 		res.reply({
-// 			type:'news',
-// 			content:[{
-// 				title:'',
-// 				description:'',
-// 				picurl:'',
-// 				url:''
-// 			}]
-// 		});
-// 	} else if (message.Event === 'CLICK') {
-// 		if (message.EventKey === 'V1001_TODAY_MUSIC') {
-// 			res.reply({
-// 				type: 'text',
-// 				content: 'thanks for you welcome!'
-// 			});
-// 		}
-// 	}
-// })
-// .middlewarify()
-// ));
+app.use(express.query());
+app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
+	if (message && (message.content === "抽奖" || message.content === "大转盘")){
+		res.reply({
+			type:'news',
+			content:[{
+				title:'',
+				description:'',
+				picurl:'',
+				url:''
+			}]
+		});
+	}
+})
+.image(function(message, req, res, next){
+
+})
+.voice(function(message, req, res, next){
+
+})
+.video(function(message, req, res, next){
+
+})
+.location(function(message, req, res, next){
+
+})
+.link(function(message, req, res, next){
+
+})
+.event(function(message, req, res, nexgt){
+	if (message.Event === 'subscribe') {
+		res.reply({
+			type:'news',
+			content:[{
+				title:'',
+				description:'',
+				picurl:'',
+				url:''
+			}]
+		});
+	} else if (message.Event === 'CLICK') {
+		if (message.EventKey === 'V1001_TODAY_MUSIC') {
+			res.reply({
+				type: 'text',
+				content: 'thanks for you welcome!'
+			});
+		}
+	}
+})
+.middlewarify()
+));
 
 var wxmenuapi = new wechatapi(config.wechatapi.appid, config.wechatapi.secret);
 
@@ -189,7 +188,7 @@ var menuCretaeFun = function(){
 	fatherNameSelFun();
 }
 
-// menuCretaeFun();
+ menuCretaeFun();
 
 var menuCallBack = function(){
 	wxmenuapi.createMenu(menuJson, function(err, result){
@@ -202,41 +201,8 @@ var menuCallBack = function(){
 	});
 }
 
-/*平台自定义接口*/
-
-app.post('/login', function(req, res){
-    console.log("+++++++++++======================", req.body);
-	if (req.session.username){
-		var reslt = req.session;
-		return res.status(200).send(reslt);
-	}
-	if (!req.body.username || !req.body.password){
-		return res.status(408).send({message:'arguments error'});
-	}	
-	var selStr = "SELECT password FROM user_table where username = ?";
-	mysqlConnection.query(selStr, [req.body.username], function(err, result){
-		if (err){
-			return res.status(500).send({message:err});
-		}
-		if (result.length < 1){
-			return res.status(405).send({message:'invalid user'});
-		}
-		if (result[0].password === req.body.password){
-			var retreuslt = {
-				message:'login success',
-				username:req.body.username,
-				password:result[0].password
-			}
-			
-			req.session = retresult;
-			return res.status(200).send(retresult);
-		}else{
-			return res.status(405).send({message:'password error'});
-		}
-	})
-});
 
 /*监听端口*/
 app.listen(8080);
 
-console.log("service is starting...");
+console.log("wechat service is starting...");
