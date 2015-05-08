@@ -65,6 +65,25 @@ keepConnected();
 
 /*平台自定义接口*/
 
+app.get('/zhanp/jxiang', function(req, res) {
+	// console.log(req);
+	var jquireyObj = url.parse(req.url, true).query;
+	console.log("+++++++++++++++++++", jquireyObj);
+	return res.status(200).send({
+		message: "success",
+		sn: "1298",
+		prizetype: 1,
+		success: "success"
+	});
+});
+
+app.post('/zhanp/tjiao', function(req, res) {
+	console.log(req.body);
+	return res.status(200).send({
+		success: true
+	});
+});
+
 app.post('/login', function(req, res){
 	if (req.session.username){
 		var reslt = req.session;

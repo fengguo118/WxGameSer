@@ -65,7 +65,7 @@ app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
 		res.reply({
 			type:'news',
 			content:[{
-				title:'',
+				title:'大转盘抽奖',
 				description:'',
 				picurl:'',
 				url:''
