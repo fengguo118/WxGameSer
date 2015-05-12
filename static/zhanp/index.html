@@ -27,22 +27,39 @@
 			</div>
 		</div>
 		<div class="content">
-			<div class="boxcontent boxyellow" id="result" style="display:none">
+			<div class="boxcontent" id="result" style="display:none">
 				<div class="box">
-					<div class="title-orange"><span>恭喜你中奖了</span></div>
+					<!-- <div class="title-orange"><span>恭喜你中奖了</span></div>
 					<div class="Detail">
 						<span id="opendialog" style="display: none;" data-rel="dialog"></span>
 						<p>你中了：<span class="red" id="prizetype">一等奖</span></p>
 						<p>你的兑奖SN码：<span class="red" id="sncode"></span></p>
 						<p class="red">本次兑奖码已经关联你的微信号，你可向公众号发送 兑奖 进行查询!</p>
-               
+
 						<p>
 							<input name="" class="px" id="tel" type="text" placeholder="输入您的手机号码">
 						</p>
+						-->
 						<p>
-							<input class="pxbtn" id="save-btn" name="提 交" type="button" value="提 交">
+							<input class="pxbtn" id="save-btn" name="提 交" type="button" value="">
 						</p>
-					</div>
+					</div> 
+				</div>
+			</div>
+			<div class="content">
+			<div class="boxcontent boxyellow" id="register" style="display:none">
+				<div class="box">
+					<div class="coclass">
+					<p>
+					<input name="" class="px" id="tel" placeholder="请输入手机号码">
+				    </p>
+					<p>
+					<input type="password" name="" class="px" id="pwd" placeholder="请输入登陆密码 ">
+				    </p>
+					<p>
+						<input class="regbtn" id="commit-btn" name="提 交" type="button" value="注册">
+					</p>
+				</div>
 				</div>
 			</div>
 			<!-- <div class="boxcontent boxyellow">
@@ -71,6 +88,8 @@
 	<script type="text/javascript">
 	$(function()
 	{
+		var clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+		$("#result").css("height", clientHeight*3.7);   
 		window.requestAnimFrame=(
 		function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(callback){window.setTimeout(callback,1000/60)}})();
 		var totalDeg=360*3+0;
@@ -112,26 +131,32 @@
 						if(prize == 1)
 						{
 							type="特等奖";
+							$("#result").addClass("boxgrandprize");
 						}
 						else if (prize == 2)
 						{
 							type="到店奖";
+							$("#result").addClass("boxstoreprize");
 						}
 						else if (prize == 3)
 						{
 							type="四等奖";
+							$("#result").addClass("boxfourprize");
 						}
 						else if (prize == 4)
 						{
 							type="三等奖";
+							$("#result").addClass("boxthreeprize");
 						}
 						else if (prize == 5)
 						{
 							type="二等奖";
+							$("#result").addClass("boxtwoprize");
 						}	
 						else if (prize == 6)
 						{
 							type="一等奖";
+							$("#result").addClass("oneprize");
 						}
 						$("#prizetype").text(type);
 						$("#result").slideToggle(500);
@@ -236,35 +261,42 @@
 });
 $("#save-btn").bind("click",function()
 {
-	var btn=$(this);
-	var tel=$("#tel").val();
-	if(tel==''){
-		alert("请输入手机号码");
-		return
-	}
-	var regu=/^[1][0-9]{10}$/;
-	var re=new RegExp(regu);
-	if(!re.test(tel))
-	{
-		alert("请输入正确手机号码");
-		return
-	}
-	var submitData={
-		tid:5,
-		code:$("#sncode").text(),
-		tel:tel,
-		action:"setTel"
-	};
-	$.post('tjiao',submitData,function(data)
+	$("#result").slideToggle(500);
+	$("#register").slideToggle(500);
+});
+$("#commit-btn").bind("click",function()
+{
+var btn=$(this);
+var tel=$("#tel").val();
+if(tel==''){
+	alert("请输入手机号码");
+	return
+}
+var regu=/^[1][0-9]{10}$/;
+var re=new RegExp(regu);
+if(!re.test(tel))
+{
+	alert("请输入正确手机号码");
+	return
+}
+var submitData={
+	tid:5,
+	code:$("#sncode").text(),
+	tel:tel,
+	action:"setTel"
+};
+$.post('tjiao',submitData,function(data)
+{
+	console.log(data);
+	if(data.success==true)
 	{
 		console.log(data);
-		if(data.success==true)
-		{
-			console.log(data);
-			alert("提交成功，谢谢您的参与");
-			return
-		}else{}
-	},"json")});
+		alert("提交成功，谢谢您的参与");
+		$("#register").slideToggle(500);
+		return
+	}else{}
+},"json")
+});
 	
 </script>
 </body>

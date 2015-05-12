@@ -11,6 +11,8 @@ var cookieparser = require('cookie-parser');
 var session      = require('express-session');
 var url          = require('url');
 var mysql        = require('mysql');
+var fs           = require('fs');
+var path         = require('path');
 var config       = require('./config/config.js').config;
 
 app.use(bodyparser.urlencoded({extended:false}));
@@ -65,23 +67,130 @@ keepConnected();
 
 /*平台自定义接口*/
 
-app.get('/zhanp/jxiang', function(req, res) {
+var uuidfun = function uuid(len, radix) {
+    var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+    var uuid = [], i;
+    radix = radix || chars.length;
+ 
+    if (len) {
+      // Compact form
+      for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random()*radix];
+    } else {
+      // rfc4122, version 4 form
+      var r;
+ 
+      // rfc4122 requires these characters
+      uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+      uuid[14] = '4';
+ 
+      // Fill in random data.  At i==19 set the high bits of clock sequence as
+      // per rfc4122, sec. 4.1.5
+      for (i = 0; i < 36; i++) {
+        if (!uuid[i]) {
+          r = 0 | Math.random()*16;
+          uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+        }
+      }
+    }
+ 
+    return uuid.join('');
+}
+
+var readWirteFile = function(filename, prizetype){
+    var filePath = path.join(__dirname, filename);  
+	var obj = fs.readFileSync(filePath, "utf-8");
+	var jsonObj = JSON.parse(obj);
+	if (jsonObj){
+	    if (prizetype == 1 && parseInt(jsonObj.one) > 0){
+		     var tmp1 = parseInt(jsonObj.one) - 1;
+			 jsonObj.one = tmp1;
+			 fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			 return prizetype;
+		}
+		else if (prizetype == 2 && parseInt(jsonObj.two) > 0){
+		    var tmp2 = parseInt(jsonObj.two) - 1;
+			jsonObj.two = tmp2;
+			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			return prizetype;
+		}
+		else if (prizetype == 3 && parseInt(jsonObj.three) > 0){
+		    var tmp3 = parseInt(jsonObj.three) - 1;
+			jsonObj.three = tmp3;
+			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			return prizetype;
+		}
+		else
+		{
+			if (prizetype > 0 && prizetype < 4)
+			{
+				return Math.floor(Math.random()*12 + 4);
+			}
+		}
+	}
+	return prizetype;
+}
+
+
+var jangpinfun = function(){
+	var prizetype = Math.floor(Math.random()*12 +1);
+	return readWirteFile("jiangp.json", prizetype);
+}
+
+app.get('/wxgame/jxiang', function(req, res){
 	// console.log(req);
 	var jquireyObj = url.parse(req.url, true).query;
 	console.log("+++++++++++++++++++", jquireyObj);
-	return res.status(200).send({
-		message: "success",
-		sn: "1298",
-		prizetype: 1,
-		success: "success"
-	});
+	var obj = {};
+	obj.openid = jquireyObj.token;
+	obj.nickname = jquireyObj.ac;
+	obj.sncode   =  uuidfun(8, 16);
+	obj.jnumber   = jangpinfun();
+	console.log("=++++++++========", obj);
+	var sqlStr = "select * from wx_user where openid=?";
+	mysqlCon.query(sqlStr, [obj.openid], function(error, result){
+		if (error){
+			console.log(error);
+			return;
+		}
+		if (result.length > 0){
+			var resu = result[0];
+			console.log(resu);
+			return res.status(200).send({"message":"success", "sn":resu.sncode, "prizetype":resu.jnumber, "error":"getsn"});
+		}
+		
+	    var insterUsr = "INSERT INTO wx_user set ?";
+	    mysqlCon.query(insterUsr, obj, function(error, result){
+		    if (error){
+			     console.log(error);
+			     return res.status(505).send("inster mysql is error!");
+		    }
+			return res.status(200).send({"message":"success", "sn":obj.sncode, "prizetype":obj.jnumber, "success":"success"});
+	    })
+	})
 });
 
-app.post('/zhanp/tjiao', function(req, res) {
-	console.log(req.body);
-	return res.status(200).send({
-		success: true
+app.post('/wxgame/tjiao', function(req, res){
+	console.log("==========-----------------------", req.body);
+	var sqlStr = "select * from wx_user where sncode=?";
+	mysqlCon.query(sqlStr, [req.body.code], function(error, result){
+		if (error){
+			console.log(error);
+			return;
+		}
+		if (result.length > 0){
+			var resu = result[0];
+			console.log(resu);
+			 var insterUsr = "update wx_user set phonenum=? where sncode=?";
+	 	    mysqlCon.query(insterUsr, [req.body.tel, req.body.code], function(error, result){
+	 		    if (error){
+	 			     console.log(error);
+	 			     return res.status(505).send("inster mysql is error!");
+	 		    }
+				console.log(result);
+			});	 
+		}
 	});
+	return res.status(200).send({success:true});
 });
 
 app.post('/login', function(req, res){
