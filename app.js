@@ -14,6 +14,15 @@ var mysql        = require('mysql');
 var fs           = require('fs');
 var path         = require('path');
 var config       = require('./config/config.js').config;
+var exec         = require('child_process').exec;
+
+exec("forever start wx.js", function (error, stdout, stderr) {
+    console.log('stdout: ' + stdout);
+    console.log('stderr: ' + stderr);
+    if (error !== null) {
+      console.log('exec error: ' + error);
+    }
+});
 
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
@@ -119,11 +128,29 @@ var readWirteFile = function(filename, prizetype){
 			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
 			return prizetype;
 		}
+		else if (prizetype == 4 && parseInt(jsonObj.four) > 0){
+		    var tmp3 = parseInt(jsonObj.three) - 1;
+			jsonObj.three = tmp3;
+			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			return prizetype;
+		}
+		else if (prizetype == 5 && parseInt(jsonObj.three) > 0){
+		    var tmp3 = parseInt(jsonObj.three) - 1;
+			jsonObj.three = tmp3;
+			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			return prizetype;
+		}
+		else if (prizetype == 6 && parseInt(jsonObj.three) > 0){
+		    var tmp3 = parseInt(jsonObj.three) - 1;
+			jsonObj.three = tmp3;
+			fs.writeFileSync(filePath, JSON.stringify(jsonObj));
+			return prizetype;
+		}
 		else
 		{
 			if (prizetype > 0 && prizetype < 4)
 			{
-				return Math.floor(Math.random()*12 + 4);
+				return Math.floor(Math.random()*5 + 1);
 			}
 		}
 	}
@@ -132,11 +159,11 @@ var readWirteFile = function(filename, prizetype){
 
 
 var jangpinfun = function(){
-	var prizetype = Math.floor(Math.random()*12 +1);
+	var prizetype = Math.floor(Math.random()*5 +1);
 	return readWirteFile("jiangp.json", prizetype);
 }
 
-app.get('/wxgame/jxiang', function(req, res){
+app.get('/zhanp/jxiang', function(req, res){
 	// console.log(req);
 	var jquireyObj = url.parse(req.url, true).query;
 	console.log("+++++++++++++++++++", jquireyObj);
@@ -147,7 +174,7 @@ app.get('/wxgame/jxiang', function(req, res){
 	obj.jnumber   = jangpinfun();
 	console.log("=++++++++========", obj);
 	var sqlStr = "select * from wx_user where openid=?";
-	mysqlCon.query(sqlStr, [obj.openid], function(error, result){
+	mysqlConnection.query(sqlStr, [obj.openid], function(error, result){
 		if (error){
 			console.log(error);
 			return;
@@ -159,7 +186,7 @@ app.get('/wxgame/jxiang', function(req, res){
 		}
 		
 	    var insterUsr = "INSERT INTO wx_user set ?";
-	    mysqlCon.query(insterUsr, obj, function(error, result){
+	    mysqlConnection.query(insterUsr, obj, function(error, result){
 		    if (error){
 			     console.log(error);
 			     return res.status(505).send("inster mysql is error!");
@@ -169,19 +196,19 @@ app.get('/wxgame/jxiang', function(req, res){
 	})
 });
 
-app.post('/wxgame/tjiao', function(req, res){
+app.post('/zhanp/tjiao', function(req, res){
 	console.log("==========-----------------------", req.body);
 	var sqlStr = "select * from wx_user where sncode=?";
-	mysqlCon.query(sqlStr, [req.body.code], function(error, result){
+	mysqlConnection.query(sqlStr, [req.body.code], function(error, result){
 		if (error){
 			console.log(error);
 			return;
 		}
 		if (result.length > 0){
 			var resu = result[0];
-			console.log(resu);
-			 var insterUsr = "update wx_user set phonenum=? where sncode=?";
-	 	    mysqlCon.query(insterUsr, [req.body.tel, req.body.code], function(error, result){
+			console.log("00000000", resu);
+			 var insterUsr = "update wx_user set phonenum=?, passwd=? where sncode=?";
+	 	    mysqlConnection.query(insterUsr, [req.body.tel, req.body.passwd, req.body.code], function(error, result){
 	 		    if (error){
 	 			     console.log(error);
 	 			     return res.status(505).send("inster mysql is error!");

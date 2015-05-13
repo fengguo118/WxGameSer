@@ -3,7 +3,7 @@
 */
 
 /* 引入第三方中间件*/
-
+var crypto      = require('crypto');
 var express      = require('express');
 var app          = express();
 var bodyparser   = require('body-parser');
@@ -59,16 +59,41 @@ var keepConnected = function() {
 keepConnected();
 
 /*微信中间件*/
+/**
+ *  * 检查签名
+ *   */
+var checkSignature = function (query, token) {
+  var signature = query.signature;
+  var timestamp = query.timestamp;
+  var nonce = query.nonce;
+
+  var shasum = crypto.createHash('sha1');
+  var arr = [token, timestamp, nonce].sort();
+    shasum.update(arr.join(''));
+
+  return shasum.digest('hex') === signature;
+};
+
+// app.use(function(req, res){
+// 	var query = req.query;
+// 	if (checkSignature(query, "junginfomation")){
+// 	     return res.send(query.echostr);
+// 		 next();
+// 	}
+//
+// 	return res.send("Bad token!");
+// });
+
 app.use(express.query());
 app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
 	if (message && (message.content === "抽奖" || message.content === "大转盘")){
 		res.reply({
-			type:'news',
+			type:"news",
 			content:[{
-				title:'大转盘抽奖',
-				description:'',
-				picurl:'',
-				url:''
+				title:'100%有奖 千万好礼免费领',
+				description:'HTL家居O2O商城荣耀开启，幸运大抽奖，千万别手软哦！',
+				picurl:'http://game.htlhome.com:8090/zhanp/image/activity-lottery-1.png',
+				url:'http://game.htlhome.com:8090/zhanp'
 			}]
 		});
 	}
@@ -93,10 +118,10 @@ app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
 		res.reply({
 			type:'news',
 			content:[{
-				title:'',
-				description:'',
-				picurl:'',
-				url:''
+				title:'100%有奖 千万好礼免费领',
+				description:'HTL家居O2O商城荣耀开启，幸运大抽奖，千万别手软哦！',
+				picurl:'http://game.htlhome.com:8090/zhanp/image/activity-lottery-1.png',
+				url:'http://game.htlhome.com:8090/zhanp'
 			}]
 		});
 	} else if (message.Event === 'CLICK') {
@@ -203,6 +228,6 @@ var menuCallBack = function(){
 
 
 /*监听端口*/
-app.listen(8080);
+app.listen(80);
 
 console.log("wechat service is starting...");

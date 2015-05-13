@@ -3,8 +3,8 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 	padding: 0;color: #444444;
 	font: 14px/1.5 Microsoft YaHei, Helvitica, Verdana, Arial, san-serif;
 }
-.activity-lottery-winning{ background: url(../image/zhanp-bg.jpg) #2a8a00 no-repeat top center;}
-.activity-lottery-end{ background: url(../image/zhanp-bg.jpg) #2a8a00 no-repeat top center;}
+.activity-lottery-winning{ background: url(../image/zhanp-bg.jpg) #2a8a00 no-repeat top center;background-size:cover;-moz-background-size:cover;-webkit-background-size:cover;}
+.activity-lottery-end{ background: url(../image/zhanp-bg.jpg) #2a8a00 no-repeat top center;background-size:cover;-moz-background-size:cover;-webkit-background-size:cover;}
 .activity-coupon-winning{ background-color:#8d0001;}
 .activity-coupon-end{ background-color:#8d0001;}
 .activity-scratch-card-winning{background: url(http://www.wxapi.cn/index/images/activity/activity-scratch-card-bg.jpg) #944f20;}
@@ -98,6 +98,9 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 }
 .boxyellow{
 	background:url(../image/zhanp-bg.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	min-height:1132px;
 	height:auto;
@@ -113,6 +116,9 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 .boxgrandprize{
 /*	background-color: #FEF8B2;*/
 	background:url(../image/grandprize.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	height:100%;
 }
@@ -120,6 +126,9 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 .boxoneprize{
 /*	background-color: #FEF8B2;*/
 	background:url(../image/oneprize.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	height:100%;
 	margin:0 0;
@@ -128,6 +137,9 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 .boxtwoprize{
 /*	background-color: #FEF8B2;*/
 	background:url(../image/twoprize.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	height:100%;
 	margin:0 0;
@@ -136,12 +148,18 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 .boxthreeprize{
 /*	background-color: #FEF8B2;*/
 	background:url(../image/threeprize.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	height:100%;
 }
 .boxfourprize{
 /*	background-color: #FEF8B2;*/
 	background:url(../image/fourprize.jpg) no-repeat;
+	background-size:cover;
+	-moz-background-size:cover;
+	-webkit-background-size:cover;
 	background-position:50% 50%;
 	height:100%;
 }
