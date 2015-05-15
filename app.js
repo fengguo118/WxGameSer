@@ -158,6 +158,30 @@ var readWirteFile = function(filename, prizetype){
 }
 
 
+var prizeleveProcess=function(prizetmp){
+	var persionSel = "select * from wx_user";
+	mysqlConnection.query(persionSel, function(error, result){
+		if (error){
+			console.log(error);
+			return error;
+		}
+		if (result.length <= 0){
+			return 0;
+		}	
+		var prizeSelect = "select prizeleve, prizeprobability, prizeprobability from prize_table";
+		mysqlConnection.query(prizeSelect, function(error, result){
+			if (error){
+				console.log(error);
+				return error;
+			}	
+			if (result.length > 0){
+				
+			}
+		});
+	})
+}
+
+
 var jangpinfun = function(){
 	var prizetype = Math.floor(Math.random()*5 +1);
 	return readWirteFile("jiangp.json", prizetype);
