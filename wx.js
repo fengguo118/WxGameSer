@@ -80,7 +80,7 @@ var checkSignature = function (query, token) {
 // 	     return res.send(query.echostr);
 // 		 next();
 // 	}
-//
+
 // 	return res.send("Bad token!");
 // });
 
@@ -139,7 +139,25 @@ app.use(wechat(config.wechat, wechat.text(function(message, req, res, next){
 var wxmenuapi = new wechatapi(config.wechatapi.appid, config.wechatapi.secret);
 
 
-var menuJson;
+var menuJson={
+	 "button":[
+	 {
+	 	"type":"view",
+	 	"name":"微商城",
+	 	"url":"http://www.htlhome.com"
+	 },
+	 {
+	 	"type":"view",
+	 	"name":"热销商品",
+	 	"url":"http://www.htlhome.com/index.php/wap/"
+	 },
+	 {
+	 	"type":"view",
+	 	"name":"会员中心",
+	 	"url":"http://www.htlhome.com/index.php/wap/passport.html"
+	 }
+	 ]
+};
 
 var selectFunction = function(){
 	var selStr = "SELECT mType as type, mName as name, mUrlOrKey as keyOrUrl  FROM menu_table WHERE isSubBtn = 'NO'";
@@ -213,9 +231,9 @@ var menuCretaeFun = function(){
 	fatherNameSelFun();
 }
 
- menuCretaeFun();
+ // menuCretaeFun();
 
-var menuCallBack = function(){
+// var menuCallBack = function(){
 	wxmenuapi.createMenu(menuJson, function(err, result){
 		if (err){
 			console.log(err);
@@ -224,7 +242,7 @@ var menuCallBack = function(){
 			console.log(result);
 		}
 	});
-}
+// }
 
 
 /*监听端口*/

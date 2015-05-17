@@ -15,6 +15,7 @@ var fs           = require('fs');
 var path         = require('path');
 var config       = require('./config/config.js').config;
 var exec         = require('child_process').exec;
+// var async        = require('async');
 
 exec("forever start wx.js", function (error, stdout, stderr) {
     console.log('stdout: ' + stdout);
@@ -150,36 +151,64 @@ var readWirteFile = function(filename, prizetype){
 		{
 			if (prizetype > 0 && prizetype < 4)
 			{
-				return Math.floor(Math.random()*5 + 1);
+				return Math.floor(Math.random()*6 + 1);
 			}
 		}
 	}
 	return prizetype;
 }
 
+var operationprize = function(leve, data){
+	var sel = "update prize_table set prizenumber=? where prizeleve=?";
+	mysqlConnection.query(sel, [data.toString(), leve], function(error, reult){
+		if (error){
+			console.log(error);
+			return;
+		}
+		console.log(reult);
+	});
+}
 
-var prizeleveProcess=function(prizetmp){
-	var persionSel = "select * from wx_user";
-	mysqlConnection.query(persionSel, function(error, result){
+
+var prizeleveProcess=function(req, res, prizetmp){
+	console.log("prizeleveProcess--------enter!", prizetmp);
+	var persionSel = "select count(*) as totalNum from wx_user";
+	mysqlConnection.query(persionSel, function(error, reslt){
 		if (error){
 			console.log(error);
 			return error;
 		}
-		if (result.length <= 0){
+		if (reslt.length <= 0){
 			return 0;
 		}	
-		var prizeSelect = "select prizeleve, prizeprobability, prizeprobability from prize_table";
+		console.log(reslt);
+		var prizeSelect = "select prizeleve, prizeprobability, prizenumber from prize_table";
 		mysqlConnection.query(prizeSelect, function(error, result){
+			console.log("-----------------------------");
 			if (error){
 				console.log(error);
 				return error;
 			}	
 			if (result.length > 0){
-				
+				result.forEach(function(d){
+					console.log(d);
+					if (prizetmp == d.prizeleve){
+						var probability = parseInt(reslt[0].totalNum) * (parseFloat(d.prizeprobability)/100);
+						if (probability >= 1 && d.prizenumber > 0){
+							console.log("prizeleveProcess===", prizetmp, probability);
+							operationprize(d.prizeleve, parseInt(d.prizenumber -1));
+							return jiangxfunction(req, res, prizetmp);
+						}
+						// else{
+						// 	return prizeleveProcess(Math.floor(Math.random()*6 + 1));
+						// }
+					}
+				});
+				return jiangxfunction(req, res, 7);
 			}
 		});
 	})
-}
+};
 
 
 var jangpinfun = function(){
@@ -187,15 +216,14 @@ var jangpinfun = function(){
 	return readWirteFile("jiangp.json", prizetype);
 }
 
-app.get('/zhanp/jxiang', function(req, res){
-	// console.log(req);
+var jiangxfunction = function(req, res, num){
 	var jquireyObj = url.parse(req.url, true).query;
 	console.log("+++++++++++++++++++", jquireyObj);
 	var obj = {};
 	obj.openid = jquireyObj.token;
 	obj.nickname = jquireyObj.ac;
 	obj.sncode   =  uuidfun(8, 16);
-	obj.jnumber   = jangpinfun();
+	obj.jnumber  = num;
 	console.log("=++++++++========", obj);
 	var sqlStr = "select * from wx_user where openid=?";
 	mysqlConnection.query(sqlStr, [obj.openid], function(error, result){
@@ -205,7 +233,7 @@ app.get('/zhanp/jxiang', function(req, res){
 		}
 		if (result.length > 0){
 			var resu = result[0];
-			console.log(resu);
+			console.log("-------000000-------", resu);
 			return res.status(200).send({"message":"success", "sn":resu.sncode, "prizetype":resu.jnumber, "error":"getsn"});
 		}
 		
@@ -218,6 +246,11 @@ app.get('/zhanp/jxiang', function(req, res){
 			return res.status(200).send({"message":"success", "sn":obj.sncode, "prizetype":obj.jnumber, "success":"success"});
 	    })
 	})
+}
+
+app.get('/zhanp/jxiang', function(req, res){
+	// console.log(req);
+	return prizeleveProcess(req, res, Math.floor(Math.random()*6 + 1));
 });
 
 app.post('/zhanp/tjiao', function(req, res){

@@ -171,15 +171,21 @@
 							count=3;
 							clearInterval(timer);
 							prize=data.prizetype;
+							if (parseInt(prize) > 6){
+								prize = 2;
+							}
 							sncode=data.sn;
-							start(prizeDeg[data.prizetype-1]);
+							start(prizeDeg[prize-1]);
 							return
 						}
 						if(data.success)
 						{
 							prize=data.prizetype;
+							if (parseInt(prize) > 6){
+								prize = 2;
+							}
 							sncode=data.sn;
-							start(prizeDeg[data.prizetype-1])
+							start(prizeDeg[prize-1])
 						}else{
 							prize=null;
 							start()
